@@ -51,7 +51,7 @@
             position: relative;
             width: 95%;
             max-width: 900px;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             border: 3px solid #1e2d45;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
@@ -64,15 +64,39 @@
             display: block;
         }
 
-        /* --- ZONAS INTERACTIVAS COMPLETAMENTE INVISIBLES --- */
         .hero-hotspot {
             position: absolute;
             cursor: pointer;
             background: transparent;
             border: none;
             outline: none;
-            /* Esta línea quita el destello al tocar en celulares, manteniendo la magia */
             -webkit-tap-highlight-color: transparent; 
+        }
+
+        /* --- BOTÓN DEL RAMO (NUEVO) --- */
+        .btn-ramo {
+            background: #d81b60;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: 2px solid #ff4081;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(216, 27, 96, 0.6);
+            margin-bottom: 30px;
+            animation: bounce 2s infinite;
+        }
+
+        .btn-ramo:hover {
+            background: #ff4081;
+            transform: scale(1.05);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         /* Botón Confesión */
@@ -90,12 +114,12 @@
             box-shadow: 0 0 20px rgba(211, 47, 47, 0.6);
             transition: all 0.3s ease;
             margin-bottom: 40px;
+            z-index: 10;
         }
 
         .btn-confesion:hover {
             transform: scale(1.05);
             background: linear-gradient(135deg, #f44336, #d32f2f);
-            box-shadow: 0 0 30px rgba(244, 67, 54, 0.8);
         }
 
         /* Modal Mensajes de Héroes */
@@ -120,7 +144,17 @@
             color: #e1f5fe;
         }
 
-        /* Modal Carta de Ángel */
+        /* --- NUEVO FONDO OSCURO PARA QUE LA CARTA NO SE VEA OPACA --- */
+        #modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 150;
+        }
+
+        /* Modal Carta de Ángel (Fondo brillante y texto nítido) */
         #confesion-modal {
             display: none;
             position: fixed;
@@ -128,13 +162,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: #ffffff;
-            color: #1a1a1a;
+            color: #111111;
             width: 85%;
             max-width: 500px;
             padding: 35px;
             border-radius: 12px;
             z-index: 200;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 0 100vmax rgba(0,0,0,0.8);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
             text-align: center;
         }
 
@@ -156,6 +190,7 @@
             display: block;
             margin-top: 15px;
             letter-spacing: 2px;
+            text-align: center;
         }
 
         .close-btn {
@@ -173,9 +208,25 @@
 
         .close-btn:hover { background: #d32f2f; }
 
+        /* Efecto de caída de flores */
+        .flower {
+            position: fixed;
+            top: -50px;
+            font-size: 2rem;
+            z-index: 300;
+            user-select: none;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+
         @media (max-width: 600px) {
             h1 { font-size: 2.8rem; }
             #hero-dialog { font-size: 0.95rem; padding: 15px; }
+            .btn-ramo { font-size: 0.95rem; padding: 10px 20px; }
         }
     </style>
 </head>
@@ -189,51 +240,34 @@
 
     <!-- EL PÓSTER INTERACTIVO -->
     <div class="interactive-poster">
-        <!-- AQUÍ SE CARGA TU IMAGEN -->
         <img src="grupos_heroes.webp" alt="Liga de la Justicia">
-
-        <!-- ZONAS INTERACTIVAS (HOTSPOTS) MAPEADAS A LA IMAGEN (AHORA INVISIBLES) -->
         
         <!-- Fila de Arriba -->
-        <div class="hero-hotspot" style="top: 18%; left: 10%; width: 12%; height: 32%;" 
-             onclick="showDialog('Red Hood: No suelo ser mensajero de nadie, pero Ángel fue muy insistente. Quiere que sepas que él siempre cuidará tus espaldas.')"></div>
-             
-        <div class="hero-hotspot" style="top: 20%; left: 24%; width: 12%; height: 32%;" 
-             onclick="showDialog('Robin: *Tt*... Ángel dice que reunir 7 colores de gerberas tiene un significado muy profundo. Será mejor que revises su archivo.')"></div>
-             
-        <div class="hero-hotspot" style="top: 15%; left: 42%; width: 14%; height: 35%;" 
-             onclick="showDialog('Superman: Hola Marely. Ángel me envió volando a darte esta gerbera amarilla. Me pidió decirte que eres la luz que ilumina sus días.')"></div>
-             
-        <div class="hero-hotspot" style="top: 15%; left: 60%; width: 13%; height: 35%;" 
-             onclick="showDialog('Superboy (Conner): Ángel movió a toda la Liga de la Justicia solo para ti. El mensaje final te está esperando.')"></div>
-             
-        <div class="hero-hotspot" style="top: 20%; left: 75%; width: 12%; height: 32%;" 
-             onclick="showDialog('Superboy (Jon): ¡Hola Marely! Ángel planeó todo esto con mucho cuidado. Desbloquea su carta, es 100% sincero contigo.')"></div>
+        <div class="hero-hotspot" style="top: 18%; left: 10%; width: 12%; height: 32%;" onclick="showDialog('Red Hood: No suelo ser mensajero de nadie, pero Ángel fue muy insistente. Quiere que sepas que él siempre cuidará tus espaldas.')"></div>
+        <div class="hero-hotspot" style="top: 20%; left: 24%; width: 12%; height: 32%;" onclick="showDialog('Robin: *Tt*... Ángel dice que reunir 7 colores de gerberas tiene un significado muy profundo. Será mejor que revises su archivo.')"></div>
+        <div class="hero-hotspot" style="top: 15%; left: 42%; width: 14%; height: 35%;" onclick="showDialog('Superman: Hola Marely. Ángel me envió volando a darte esta gerbera amarilla. Me pidió decirte que eres la luz que ilumina sus días.')"></div>
+        <div class="hero-hotspot" style="top: 15%; left: 60%; width: 13%; height: 35%;" onclick="showDialog('Superboy (Conner): Ángel movió a toda la Liga de la Justicia solo para ti. El mensaje final te está esperando.')"></div>
+        <div class="hero-hotspot" style="top: 20%; left: 75%; width: 12%; height: 32%;" onclick="showDialog('Superboy (Jon): ¡Hola Marely! Ángel planeó todo esto con mucho cuidado. Desbloquea su carta, es 100% sincero contigo.')"></div>
 
         <!-- Fila de Abajo -->
-        <div class="hero-hotspot" style="top: 55%; left: 5%; width: 13%; height: 40%;" 
-             onclick="showDialog('Flash: ¡Llegué corriendo! Ángel me dio esta gerbera naranja para ti. Simboliza todo el entusiasmo y la emoción que le provocas.')"></div>
-             
-        <div class="hero-hotspot" style="top: 55%; left: 19%; width: 13%; height: 40%;" 
-             onclick="showDialog('Kid Flash: ¡Ángel me dijo que no me detuviera hasta entregarte esta gerbera roja! Significa el amor y la fuerza de lo que siente por ti.')"></div>
-             
-        <div class="hero-hotspot" style="top: 52%; left: 35%; width: 14%; height: 42%;" 
-             onclick="showDialog('Batman: Soy Batman. Ángel me pidió entregarte esta gerbera blanca. Dice que simboliza la pureza y honestidad de sus intenciones contigo.')"></div>
-             
-        <div class="hero-hotspot" style="top: 52%; left: 51%; width: 14%; height: 42%;" 
-             onclick="showDialog('Supergirl: ¡Hola! Ángel me encargó darte esta gerbera rosa claro. Representa la enorme admiración que siente por ti y lo increíble que eres.')"></div>
-             
-        <div class="hero-hotspot" style="top: 50%; left: 67%; width: 14%; height: 45%;" 
-             onclick="showDialog('Green Arrow: Tengo gran puntería, pero Ángel dio en el blanco contigo. Me pidió darte esta gerbera rosa oscuro para agradecerte cada instante a su lado.')"></div>
-             
-        <div class="hero-hotspot" style="top: 52%; left: 82%; width: 13%; height: 42%;" 
-             onclick="showDialog('Nightwing: Ángel me confió esta gerbera morada. Dice que representa la elegancia y el gran orgullo que siente de tenerte en su vida.')"></div>
+        <div class="hero-hotspot" style="top: 55%; left: 5%; width: 13%; height: 40%;" onclick="showDialog('Flash: ¡Llegué corriendo! Ángel me dio esta gerbera naranja para ti. Simboliza todo el entusiasmo y la emoción que le provocas.')"></div>
+        <div class="hero-hotspot" style="top: 55%; left: 19%; width: 13%; height: 40%;" onclick="showDialog('Kid Flash: ¡Ángel me dijo que no me detuviera hasta entregarte esta gerbera roja! Significa el amor y la fuerza de lo que siente por ti.')"></div>
+        <div class="hero-hotspot" style="top: 52%; left: 35%; width: 14%; height: 42%;" onclick="showDialog('Batman: Soy Batman. Ángel me pidió entregarte esta gerbera blanca. Dice que simboliza la pureza y honestidad de sus intenciones contigo.')"></div>
+        <div class="hero-hotspot" style="top: 52%; left: 51%; width: 14%; height: 42%;" onclick="showDialog('Supergirl: ¡Hola! Ángel me encargó darte esta gerbera rosa claro. Representa la enorme admiración que siente por ti y lo increíble que eres.')"></div>
+        <div class="hero-hotspot" style="top: 50%; left: 67%; width: 14%; height: 45%;" onclick="showDialog('Green Arrow: Tengo gran puntería, pero Ángel dio en el blanco contigo. Me pidió darte esta gerbera rosa oscuro para agradecerte cada instante a su lado.')"></div>
+        <div class="hero-hotspot" style="top: 52%; left: 82%; width: 13%; height: 42%;" onclick="showDialog('Nightwing: Ángel me confió esta gerbera morada. Dice que representa la elegancia y el gran orgullo que siente de tenerte en su vida.')"></div>
     </div>
+
+    <!-- BOTÓN DEL RAMO INTERACTIVO -->
+    <button class="btn-ramo" onclick="lanzarRamo()">⬆️ Tómalo después de leerlo 💐</button>
 
     <!-- EL BOTÓN DEL MENSAJE REAL -->
     <button class="btn-confesion" onclick="openConfesion()">Desbloquear Archivo Clasificado</button>
 
     <div id="hero-dialog"></div>
+
+    <!-- CAPA OSCURA PARA EVITAR OPACIDAD -->
+    <div id="modal-overlay" onclick="closeConfesion()"></div>
 
     <!-- CARTA DE CONFESIÓN DE ÁNGEL -->
     <div id="confesion-modal">
@@ -241,7 +275,8 @@
             Marely,<br><br>
             Quise reunir a todos estos héroes para pedirles que hablaran por mí y te entregaran <b>7 gerberas diferentes</b>.<br><br>
             Si buscas su significado, descubrirás que regalar 7 gerberas es una promesa profunda que dice: <b>"Estoy enamorado de ti"</b>.<br><br>
-            Y es la pura verdad. No me interesan los juegos ni las cosas a medias. Sé lo mucho que vales y estoy dispuesto a demostrarlo todos los días. <b>Quiero algo bien y serio contigo</b>. No tengo prisa; estoy dispuesto a esperarte el tiempo que sea necesario, porque alguien como tú, vale toda la espera del mundo.<br><br>
+            Y es la pura verdad. No me interesan los juegos ni las cosas a medias. Quiero algo bien y serio contigo.<br><br>
+            <b>Te pienso esperar y quiero conocerte más. No me importa que pasen días, meses o años; quiero conocer cada una de tus facetas</b>, todo lo que te hace ser tú. Sé lo mucho que vales y estoy dispuesto a demostrarlo todos los días.<br><br>
             Con todo mi corazón,
             <span class="firma">ÁNGEL</span>
         </div>
@@ -263,12 +298,32 @@
         }
 
         function openConfesion() {
+            document.getElementById('modal-overlay').style.display = 'block';
             document.getElementById('confesion-modal').style.display = 'block';
             document.getElementById('hero-dialog').style.display = 'none'; 
         }
 
         function closeConfesion() {
+            document.getElementById('modal-overlay').style.display = 'none';
             document.getElementById('confesion-modal').style.display = 'none';
+        }
+
+        function lanzarRamo() {
+            const flowers = ['🌸', '🌺', '🌻', '🌹', '🌷'];
+            for (let i = 0; i < 40; i++) {
+                let flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.innerText = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                flower.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+                document.body.appendChild(flower);
+                
+                // Limpiar del DOM después de caer
+                setTimeout(() => {
+                    flower.remove();
+                }, 4000);
+            }
         }
     </script>
 </body>
