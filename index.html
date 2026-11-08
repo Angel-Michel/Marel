@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo M.A.R.E.L.Y.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #050a14;
+            background-image: radial-gradient(circle at center, #0a1428 0%, #02040a 100%);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Teko', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            color: #ffc107; /* Amarillo DC clásico */
+            margin: 0;
+            text-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #4fc3f7;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: -10px;
+        }
+
+        /* Cuadrícula de Héroes */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 600px) {
+            .roster-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (max-width: 599px) {
+            .roster-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .hero-card {
+            background: #111b2b;
+            border: 2px solid #1e2d45;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .hero-card:hover {
+            transform: translateY(-5px);
+            border-color: #ffc107;
+            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 120px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        .hero-name {
+            font-family: 'Teko', sans-serif;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 5px 0;
+            letter-spacing: 1px;
+            color: #e0e0e0;
+        }
+
+        /* El Botón de tu Mensaje Principal */
+        .btn-confesion {
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            font-family: 'Teko', sans-serif;
+            font-size: 1.8rem;
+            padding: 10px 40px;
+            border: 2px solid #ff5252;
+            border-radius: 5px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px rgba(211, 47, 47, 0.6);
+            transition: all 0.3s ease;
+            margin-bottom: 40px;
+        }
+
+        .btn-confesion:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            box-shadow: 0 0 30px rgba(244, 67, 54, 0.8);
+        }
+
+        /* Modal para diálogos cortos de los héroes */
+        #hero-dialog {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 20, 40, 0.95);
+            border: 1px solid #4fc3f7;
+            border-left: 5px solid #4fc3f7;
+            padding: 15px 25px;
+            border-radius: 4px;
+            width: 80%;
+            max-width: 400px;
+            z-index: 100;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #e1f5fe;
+        }
+
+        /* Modal de tu Carta Principal */
+        #confesion-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            color: #1a1a1a;
+            width: 85%;
+            max-width: 500px;
+            padding: 35px;
+            border-radius: 12px;
+            z-index: 200;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9), 0 0 0 100vmax rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        .confesion-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+
+        .confesion-text b {
+            color: #d32f2f;
+        }
+
+        .close-btn {
+            background: #111b2b;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover { background: #d32f2f; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Liga de la Justicia</h1>
+        <div class="subtitle">Protocolo de Seguridad: Marely - Nivel Omega</div>
+    </div>
+
+    <!-- CUADRÍCULA DE HÉROES -->
+    <div class="roster-grid">
+        <!-- Batman -->
+        <div class="hero-card" onclick="showDialog('Batman: Incluso en la noche más oscura, tú eres la luz que guía a Ciudad Gótica... y su corazón.')">
+            <img class="hero-img" src="batman.jfif" alt="Batman">
+            <div class="hero-name">BATMAN</div>
+        </div>
+        <!-- Superman -->
+        <div class="hero-card" onclick="showDialog('Superman: Tengo visión de rayos X, pero no la necesito para ver que vales oro.')">
+            <img class="hero-img" src="superman.jfif" alt="Superman">
+            <div class="hero-name">SUPERMAN</div>
+        </div>
+        <!-- Supergirl -->
+        <div class="hero-card" onclick="showDialog('Supergirl: No necesitas venir de Krypton para ser la persona más fuerte e increíble que conocemos.')">
+            <img class="hero-img" src="supergirl.jfif" alt="Supergirl">
+            <div class="hero-name">SUPERGIRL</div>
+        </div>
+        <!-- Flash (Barry) -->
+        <div class="hero-card" onclick="showDialog('Flash: Correría por todo el multiverso y rompería la barrera del tiempo solo para verte sonreír hoy.')">
+            <img class="hero-img" src="barry.jfif" alt="Barry Allen">
+            <div class="hero-name">FLASH</div>
+        </div>
+        <!-- Kid Flash (Wally) -->
+        <div class="hero-card" onclick="showDialog('Kid Flash: ¡Incluso yo me detendría un segundo entero solo para darte esta gerbera!')">
+            <img class="hero-img" src="wally.jfif" alt="Wally West">
+            <div class="hero-name">KID FLASH</div>
+        </div>
+        <!-- Green Arrow -->
+        <div class="hero-card" onclick="showDialog('Green Arrow: Mi puntería es perfecta, pero él es quien dio directo en el blanco contigo.')">
+            <img class="hero-img" src="oliver.jfif" alt="Oliver Queen">
+            <div class="hero-name">GREEN ARROW</div>
+        </div>
+        <!-- Nightwing (Dick) -->
+        <div class="hero-card" onclick="showDialog('Nightwing: He hecho acrobacias mortales, pero nada me da tanto vértigo como verte brillar.')">
+            <img class="hero-img" src="dick.jfif" alt="Dick Grayson">
+            <div class="hero-name">NIGHTWING</div>
+        </div>
+        <!-- Red Hood (Jason) -->
+        <div class="hero-card" onclick="showDialog('Red Hood: No soy muy de dar flores... pero supongo que tú eres la excepción a todas mis reglas.')">
+            <img class="hero-img" src="jason.jfif" alt="Jason Todd">
+            <div class="hero-name">RED HOOD</div>
+        </div>
+        <!-- Robin (Damian) -->
+        <div class="hero-card" onclick="showDialog('Robin: *Tt*... Toma. No te acostumbres. Pero admite que es una buena flor.')">
+            <img class="hero-img" src="damian.jfif" alt="Damian Wayne">
+            <div class="hero-name">ROBIN</div>
+        </div>
+        <!-- Superboy (Conner) -->
+        <div class="hero-card" onclick="showDialog('Superboy: ¿Mitad humano, mitad kryptoniano? No importa, ambos lados están de acuerdo en que eres genial.')">
+            <img class="hero-img" src="conner.jfif" alt="Conner Kent">
+            <div class="hero-name">SUPERBOY (CONNER)</div>
+        </div>
+        <!-- Superboy (Jon) -->
+        <div class="hero-card" onclick="showDialog('Superboy: Mi papá me enseñó a proteger lo que es importante... y tú eres muy importante para él.')">
+            <img class="hero-img" src="jonathan.jfif" alt="Jon Kent">
+            <div class="hero-name">SUPERBOY (JON)</div>
+        </div>
+    </div>
+
+    <!-- EL BOTÓN DEL MENSAJE REAL -->
+    <button class="btn-confesion" onclick="openConfesion()">Desbloquear Archivo Clasificado</button>
+
+    <!-- Diálogos emergentes de los héroes -->
+    <div id="hero-dialog"></div>
+
+    <!-- TU CARTA DE CONFESIÓN -->
+    <div id="confesion-modal">
+        <div class="confesion-text">
+            Marely,<br><br>
+            Quise reunir a todos estos héroes porque para mí, tú eres igual de increíble. Pero más allá de los juegos y las sorpresas, hay algo muy real que quiero decirte hoy.<br><br>
+            <b>Te quiero de verdad, para algo bien y serio.</b><br><br>
+            No me interesan los juegos ni las cosas a medias. Sé lo mucho que vales y estoy dispuesto a demostrarlo todos los días. No tengo prisa; <b>estoy dispuesto a esperarte el tiempo que sea necesario</b> porque sé que alguien como tú vale toda la espera del mundo.<br><br>
+            Con todo mi corazón,<br>
+            (Tu nombre aquí)
+        </div>
+        <button class="close-btn" onclick="closeConfesion()">Cerrar Archivo</button>
+    </div>
+
+    <script>
+        let dialogTimeout;
+
+        function showDialog(text) {
+            const dialog = document.getElementById('hero-dialog');
+            dialog.innerText = text;
+            dialog.style.display = 'block';
+            
+            clearTimeout(dialogTimeout);
+            dialogTimeout = setTimeout(() => {
+                dialog.style.display = 'none';
+            }, 4500); // El mensaje desaparece a los 4.5 segundos
+        }
+
+        function openConfesion() {
+            document.getElementById('confesion-modal').style.display = 'block';
+            document.getElementById('hero-dialog').style.display = 'none'; // Oculta diálogos previos
+        }
+
+        function closeConfesion() {
+            document.getElementById('confesion-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
