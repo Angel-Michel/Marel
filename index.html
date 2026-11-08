@@ -31,7 +31,7 @@
             font-family: 'Teko', sans-serif;
             font-size: 3.5rem;
             letter-spacing: 4px;
-            color: #ffc107; /* Amarillo DC clásico */
+            color: #ffc107; 
             margin: 0;
             text-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
             text-transform: uppercase;
@@ -43,59 +43,49 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-top: -10px;
+            margin-bottom: 20px;
         }
 
-        /* Cuadrícula de Héroes */
-        .roster-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
-            width: 90%;
-            max-width: 800px;
-            margin-bottom: 30px;
-        }
-
-        @media (min-width: 600px) {
-            .roster-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        @media (max-width: 599px) {
-            .roster-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        .hero-card {
-            background: #111b2b;
-            border: 2px solid #1e2d45;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        /* --- CONTENEDOR DE LA IMAGEN INTERACTIVA --- */
+        .interactive-poster {
             position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            width: 95%;
+            max-width: 900px;
+            margin-bottom: 40px;
+            border: 3px solid #1e2d45;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            overflow: hidden;
         }
 
-        .hero-card:hover {
-            transform: translateY(-5px);
-            border-color: #ffc107;
-            box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
-        }
-
-        .hero-img {
+        .interactive-poster img {
             width: 100%;
-            height: 120px;
-            background: #000;
-            object-fit: cover;
+            height: auto;
+            display: block;
         }
 
-        .hero-name {
-            font-family: 'Teko', sans-serif;
-            font-size: 1.2rem;
-            text-align: center;
-            margin: 5px 0;
-            letter-spacing: 1px;
-            color: #e0e0e0;
+        /* Las zonas interactivas (Botones invisibles sobre cada personaje) */
+        .hero-hotspot {
+            position: absolute;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            animation: pulse-border 2s infinite;
         }
 
-        /* El Botón de tu Mensaje Principal */
+        .hero-hotspot:hover {
+            background: rgba(255, 193, 7, 0.2);
+            border: 2px solid #ffc107;
+            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
+            50% { border-color: rgba(79, 195, 247, 0.5); box-shadow: inset 0 0 10px rgba(79, 195, 247, 0.3); }
+        }
+
+        /* Botón Confesión */
         .btn-confesion {
             background: linear-gradient(135deg, #d32f2f, #b71c1c);
             color: white;
@@ -118,29 +108,29 @@
             box-shadow: 0 0 30px rgba(244, 67, 54, 0.8);
         }
 
-        /* Modal para diálogos cortos de los héroes */
+        /* Modal Mensajes de Héroes */
         #hero-dialog {
             display: none;
             position: fixed;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(10, 20, 40, 0.95);
-            border: 1px solid #4fc3f7;
-            border-left: 5px solid #4fc3f7;
-            padding: 15px 25px;
-            border-radius: 4px;
-            width: 80%;
-            max-width: 400px;
+            border: 1px solid #ffc107;
+            border-left: 5px solid #ffc107;
+            padding: 20px 30px;
+            border-radius: 8px;
+            width: 85%;
+            max-width: 450px;
             z-index: 100;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            font-size: 0.95rem;
-            line-height: 1.4;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            font-size: 1.1rem;
+            line-height: 1.5;
             color: #e1f5fe;
         }
 
-        /* Modal de tu Carta Principal */
+        /* Modal Carta de Ángel */
         #confesion-modal {
             display: none;
             position: fixed;
@@ -169,6 +159,15 @@
             color: #d32f2f;
         }
 
+        .firma {
+            font-family: 'Teko', sans-serif;
+            font-size: 2.5rem;
+            color: #d32f2f;
+            display: block;
+            margin-top: 15px;
+            letter-spacing: 2px;
+        }
+
         .close-btn {
             background: #111b2b;
             color: white;
@@ -183,6 +182,11 @@
         }
 
         .close-btn:hover { background: #d32f2f; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            #hero-dialog { font-size: 0.95rem; padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -190,82 +194,77 @@
     <div class="header">
         <h1>Liga de la Justicia</h1>
         <div class="subtitle">Protocolo de Seguridad: Marely - Nivel Omega</div>
+        <p style="color: #90caf9; font-style: italic; font-size: 0.9rem;">Toca a cada héroe para recibir su mensaje...</p>
     </div>
 
-    <!-- CUADRÍCULA DE HÉROES -->
-    <div class="roster-grid">
-        <!-- Batman -->
-        <div class="hero-card" onclick="showDialog('Batman: Incluso en la noche más oscura, tú eres la luz que guía a Ciudad Gótica... y su corazón.')">
-            <img class="hero-img" src="batman.jfif" alt="Batman">
-            <div class="hero-name">BATMAN</div>
-        </div>
-        <!-- Superman -->
-        <div class="hero-card" onclick="showDialog('Superman: Tengo visión de rayos X, pero no la necesito para ver que vales oro.')">
-            <img class="hero-img" src="superman.jfif" alt="Superman">
-            <div class="hero-name">SUPERMAN</div>
-        </div>
-        <!-- Supergirl -->
-        <div class="hero-card" onclick="showDialog('Supergirl: No necesitas venir de Krypton para ser la persona más fuerte e increíble que conocemos.')">
-            <img class="hero-img" src="supergirl.jfif" alt="Supergirl">
-            <div class="hero-name">SUPERGIRL</div>
-        </div>
-        <!-- Flash (Barry) -->
-        <div class="hero-card" onclick="showDialog('Flash: Correría por todo el multiverso y rompería la barrera del tiempo solo para verte sonreír hoy.')">
-            <img class="hero-img" src="barry.jfif" alt="Barry Allen">
-            <div class="hero-name">FLASH</div>
-        </div>
-        <!-- Kid Flash (Wally) -->
-        <div class="hero-card" onclick="showDialog('Kid Flash: ¡Incluso yo me detendría un segundo entero solo para darte esta gerbera!')">
-            <img class="hero-img" src="wally.jfif" alt="Wally West">
-            <div class="hero-name">KID FLASH</div>
-        </div>
-        <!-- Green Arrow -->
-        <div class="hero-card" onclick="showDialog('Green Arrow: Mi puntería es perfecta, pero él es quien dio directo en el blanco contigo.')">
-            <img class="hero-img" src="oliver.jfif" alt="Oliver Queen">
-            <div class="hero-name">GREEN ARROW</div>
-        </div>
-        <!-- Nightwing (Dick) -->
-        <div class="hero-card" onclick="showDialog('Nightwing: He hecho acrobacias mortales, pero nada me da tanto vértigo como verte brillar.')">
-            <img class="hero-img" src="dick.jfif" alt="Dick Grayson">
-            <div class="hero-name">NIGHTWING</div>
-        </div>
-        <!-- Red Hood (Jason) -->
-        <div class="hero-card" onclick="showDialog('Red Hood: No soy muy de dar flores... pero supongo que tú eres la excepción a todas mis reglas.')">
-            <img class="hero-img" src="jason.jfif" alt="Jason Todd">
-            <div class="hero-name">RED HOOD</div>
-        </div>
-        <!-- Robin (Damian) -->
-        <div class="hero-card" onclick="showDialog('Robin: *Tt*... Toma. No te acostumbres. Pero admite que es una buena flor.')">
-            <img class="hero-img" src="damian.jfif" alt="Damian Wayne">
-            <div class="hero-name">ROBIN</div>
-        </div>
-        <!-- Superboy (Conner) -->
-        <div class="hero-card" onclick="showDialog('Superboy: ¿Mitad humano, mitad kryptoniano? No importa, ambos lados están de acuerdo en que eres genial.')">
-            <img class="hero-img" src="conner.jfif" alt="Conner Kent">
-            <div class="hero-name">SUPERBOY (CONNER)</div>
-        </div>
-        <!-- Superboy (Jon) -->
-        <div class="hero-card" onclick="showDialog('Superboy: Mi papá me enseñó a proteger lo que es importante... y tú eres muy importante para él.')">
-            <img class="hero-img" src="jonathan.jfif" alt="Jon Kent">
-            <div class="hero-name">SUPERBOY (JON)</div>
-        </div>
+    <!-- EL PÓSTER INTERACTIVO -->
+    <div class="interactive-poster">
+        <!-- AQUÍ SE CARGA TU IMAGEN WEBP -->
+        <img src="grupos_heroes.webp" alt="Liga de la Justicia">
+
+        <!-- ZONAS INTERACTIVAS (HOTSPOTS) MAPEADAS A LA IMAGEN -->
+        
+        <!-- Fila de Arriba -->
+        <!-- Red Hood (Arriba Izquierda) -->
+        <div class="hero-hotspot" style="top: 18%; left: 10%; width: 12%; height: 32%;" 
+             onclick="showDialog('Red Hood: No suelo ser mensajero de nadie, pero Ángel fue muy insistente. Quiere que sepas que él siempre cuidará tus espaldas.')"></div>
+             
+        <!-- Robin / Damian (Arriba Centro-Izquierda) -->
+        <div class="hero-hotspot" style="top: 20%; left: 24%; width: 12%; height: 32%;" 
+             onclick="showDialog('Robin: *Tt*... Ángel dice que reunir 7 colores de gerberas tiene un significado muy profundo. Será mejor que revises su archivo.')"></div>
+             
+        <!-- Superman (Arriba Centro) -->
+        <div class="hero-hotspot" style="top: 15%; left: 42%; width: 14%; height: 35%;" 
+             onclick="showDialog('Superman: Hola Marely. Ángel me envió volando a darte esta gerbera amarilla. Me pidió decirte que eres la luz que ilumina sus días.')"></div>
+             
+        <!-- Superboy Conner / Playera Negra (Arriba Centro-Derecha) -->
+        <div class="hero-hotspot" style="top: 15%; left: 60%; width: 13%; height: 35%;" 
+             onclick="showDialog('Superboy (Conner): Ángel movió a toda la Liga de la Justicia solo para ti. El mensaje final te está esperando.')"></div>
+             
+        <!-- Superboy Jon / Chamarra Azul (Arriba Derecha) -->
+        <div class="hero-hotspot" style="top: 20%; left: 75%; width: 12%; height: 32%;" 
+             onclick="showDialog('Superboy (Jon): ¡Hola Marely! Ángel planeó todo esto con mucho cuidado. Desbloquea su carta, es 100% sincero contigo.')"></div>
+
+        <!-- Fila de Abajo -->
+        <!-- Flash / Barry (Abajo Izquierda) -->
+        <div class="hero-hotspot" style="top: 55%; left: 5%; width: 13%; height: 40%;" 
+             onclick="showDialog('Flash: ¡Llegué corriendo! Ángel me dio esta gerbera naranja para ti. Simboliza todo el entusiasmo y la emoción que le provocas.')"></div>
+             
+        <!-- Kid Flash / Wally (Abajo Centro-Izquierda) -->
+        <div class="hero-hotspot" style="top: 55%; left: 19%; width: 13%; height: 40%;" 
+             onclick="showDialog('Kid Flash: ¡Ángel me dijo que no me detuviera hasta entregarte esta gerbera roja! Significa el amor y la fuerza de lo que siente por ti.')"></div>
+             
+        <!-- Batman (Abajo Centro) -->
+        <div class="hero-hotspot" style="top: 52%; left: 35%; width: 14%; height: 42%;" 
+             onclick="showDialog('Batman: Soy Batman. Ángel me pidió entregarte esta gerbera blanca. Dice que simboliza la pureza y honestidad de sus intenciones contigo.')"></div>
+             
+        <!-- Supergirl (Abajo Centro-Derecha) -->
+        <div class="hero-hotspot" style="top: 52%; left: 51%; width: 14%; height: 42%;" 
+             onclick="showDialog('Supergirl: ¡Hola! Ángel me encargó darte esta gerbera rosa claro. Representa la enorme admiración que siente por ti y lo increíble que eres.')"></div>
+             
+        <!-- Green Arrow (Abajo Derecha) -->
+        <div class="hero-hotspot" style="top: 50%; left: 67%; width: 14%; height: 45%;" 
+             onclick="showDialog('Green Arrow: Tengo gran puntería, pero Ángel dio en el blanco contigo. Me pidió darte esta gerbera rosa oscuro para agradecerte cada instante a su lado.')"></div>
+             
+        <!-- Nightwing (Abajo Extremo Derecha) -->
+        <div class="hero-hotspot" style="top: 52%; left: 82%; width: 13%; height: 42%;" 
+             onclick="showDialog('Nightwing: Ángel me confió esta gerbera morada. Dice que representa la elegancia y el gran orgullo que siente de tenerte en su vida.')"></div>
     </div>
 
     <!-- EL BOTÓN DEL MENSAJE REAL -->
     <button class="btn-confesion" onclick="openConfesion()">Desbloquear Archivo Clasificado</button>
 
-    <!-- Diálogos emergentes de los héroes -->
     <div id="hero-dialog"></div>
 
-    <!-- TU CARTA DE CONFESIÓN -->
+    <!-- CARTA DE CONFESIÓN DE ÁNGEL -->
     <div id="confesion-modal">
         <div class="confesion-text">
             Marely,<br><br>
-            Quise reunir a todos estos héroes porque para mí, tú eres igual de increíble. Pero más allá de los juegos y las sorpresas, hay algo muy real que quiero decirte hoy.<br><br>
-            <b>Te quiero de verdad, para algo bien y serio.</b><br><br>
-            No me interesan los juegos ni las cosas a medias. Sé lo mucho que vales y estoy dispuesto a demostrarlo todos los días. No tengo prisa; <b>estoy dispuesto a esperarte el tiempo que sea necesario</b> porque sé que alguien como tú vale toda la espera del mundo.<br><br>
-            Con todo mi corazón,<br>
-            (Tu nombre aquí)
+            Quise reunir a todos estos héroes para pedirles que hablaran por mí y te entregaran <b>7 gerberas diferentes</b>.<br><br>
+            Si buscas su significado, descubrirás que regalar 7 gerberas es una promesa profunda que dice: <b>"Estoy enamorado de ti"</b>.<br><br>
+            Y es la pura verdad. No me interesan los juegos ni las cosas a medias. Sé lo mucho que vales y estoy dispuesto a demostrarlo todos los días. <b>Quiero algo bien y serio contigo</b>. No tengo prisa; estoy dispuesto a esperarte el tiempo que sea necesario, porque alguien como tú, vale toda la espera del mundo.<br><br>
+            Con todo mi corazón,
+            <span class="firma">ÁNGEL</span>
         </div>
         <button class="close-btn" onclick="closeConfesion()">Cerrar Archivo</button>
     </div>
@@ -281,12 +280,12 @@
             clearTimeout(dialogTimeout);
             dialogTimeout = setTimeout(() => {
                 dialog.style.display = 'none';
-            }, 4500); // El mensaje desaparece a los 4.5 segundos
+            }, 6500); 
         }
 
         function openConfesion() {
             document.getElementById('confesion-modal').style.display = 'block';
-            document.getElementById('hero-dialog').style.display = 'none'; // Oculta diálogos previos
+            document.getElementById('hero-dialog').style.display = 'none'; 
         }
 
         function closeConfesion() {
