@@ -64,25 +64,15 @@
             display: block;
         }
 
-        /* Las zonas interactivas (Botones invisibles sobre cada personaje) */
+        /* --- ZONAS INTERACTIVAS COMPLETAMENTE INVISIBLES --- */
         .hero-hotspot {
             position: absolute;
             cursor: pointer;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            animation: pulse-border 2s infinite;
-        }
-
-        .hero-hotspot:hover {
-            background: rgba(255, 193, 7, 0.2);
-            border: 2px solid #ffc107;
-            box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { border-color: rgba(255, 255, 255, 0.1); }
-            50% { border-color: rgba(79, 195, 247, 0.5); box-shadow: inset 0 0 10px rgba(79, 195, 247, 0.3); }
+            background: transparent;
+            border: none;
+            outline: none;
+            /* Esta línea quita el destello al tocar en celulares, manteniendo la magia */
+            -webkit-tap-highlight-color: transparent; 
         }
 
         /* Botón Confesión */
@@ -199,54 +189,43 @@
 
     <!-- EL PÓSTER INTERACTIVO -->
     <div class="interactive-poster">
-        <!-- AQUÍ SE CARGA TU IMAGEN WEBP -->
+        <!-- AQUÍ SE CARGA TU IMAGEN -->
         <img src="grupos_heroes.webp" alt="Liga de la Justicia">
 
-        <!-- ZONAS INTERACTIVAS (HOTSPOTS) MAPEADAS A LA IMAGEN -->
+        <!-- ZONAS INTERACTIVAS (HOTSPOTS) MAPEADAS A LA IMAGEN (AHORA INVISIBLES) -->
         
         <!-- Fila de Arriba -->
-        <!-- Red Hood (Arriba Izquierda) -->
         <div class="hero-hotspot" style="top: 18%; left: 10%; width: 12%; height: 32%;" 
              onclick="showDialog('Red Hood: No suelo ser mensajero de nadie, pero Ángel fue muy insistente. Quiere que sepas que él siempre cuidará tus espaldas.')"></div>
              
-        <!-- Robin / Damian (Arriba Centro-Izquierda) -->
         <div class="hero-hotspot" style="top: 20%; left: 24%; width: 12%; height: 32%;" 
              onclick="showDialog('Robin: *Tt*... Ángel dice que reunir 7 colores de gerberas tiene un significado muy profundo. Será mejor que revises su archivo.')"></div>
              
-        <!-- Superman (Arriba Centro) -->
         <div class="hero-hotspot" style="top: 15%; left: 42%; width: 14%; height: 35%;" 
              onclick="showDialog('Superman: Hola Marely. Ángel me envió volando a darte esta gerbera amarilla. Me pidió decirte que eres la luz que ilumina sus días.')"></div>
              
-        <!-- Superboy Conner / Playera Negra (Arriba Centro-Derecha) -->
         <div class="hero-hotspot" style="top: 15%; left: 60%; width: 13%; height: 35%;" 
              onclick="showDialog('Superboy (Conner): Ángel movió a toda la Liga de la Justicia solo para ti. El mensaje final te está esperando.')"></div>
              
-        <!-- Superboy Jon / Chamarra Azul (Arriba Derecha) -->
         <div class="hero-hotspot" style="top: 20%; left: 75%; width: 12%; height: 32%;" 
              onclick="showDialog('Superboy (Jon): ¡Hola Marely! Ángel planeó todo esto con mucho cuidado. Desbloquea su carta, es 100% sincero contigo.')"></div>
 
         <!-- Fila de Abajo -->
-        <!-- Flash / Barry (Abajo Izquierda) -->
         <div class="hero-hotspot" style="top: 55%; left: 5%; width: 13%; height: 40%;" 
              onclick="showDialog('Flash: ¡Llegué corriendo! Ángel me dio esta gerbera naranja para ti. Simboliza todo el entusiasmo y la emoción que le provocas.')"></div>
              
-        <!-- Kid Flash / Wally (Abajo Centro-Izquierda) -->
         <div class="hero-hotspot" style="top: 55%; left: 19%; width: 13%; height: 40%;" 
              onclick="showDialog('Kid Flash: ¡Ángel me dijo que no me detuviera hasta entregarte esta gerbera roja! Significa el amor y la fuerza de lo que siente por ti.')"></div>
              
-        <!-- Batman (Abajo Centro) -->
         <div class="hero-hotspot" style="top: 52%; left: 35%; width: 14%; height: 42%;" 
              onclick="showDialog('Batman: Soy Batman. Ángel me pidió entregarte esta gerbera blanca. Dice que simboliza la pureza y honestidad de sus intenciones contigo.')"></div>
              
-        <!-- Supergirl (Abajo Centro-Derecha) -->
         <div class="hero-hotspot" style="top: 52%; left: 51%; width: 14%; height: 42%;" 
              onclick="showDialog('Supergirl: ¡Hola! Ángel me encargó darte esta gerbera rosa claro. Representa la enorme admiración que siente por ti y lo increíble que eres.')"></div>
              
-        <!-- Green Arrow (Abajo Derecha) -->
         <div class="hero-hotspot" style="top: 50%; left: 67%; width: 14%; height: 45%;" 
              onclick="showDialog('Green Arrow: Tengo gran puntería, pero Ángel dio en el blanco contigo. Me pidió darte esta gerbera rosa oscuro para agradecerte cada instante a su lado.')"></div>
              
-        <!-- Nightwing (Abajo Extremo Derecha) -->
         <div class="hero-hotspot" style="top: 52%; left: 82%; width: 13%; height: 42%;" 
              onclick="showDialog('Nightwing: Ángel me confió esta gerbera morada. Dice que representa la elegancia y el gran orgullo que siente de tenerte en su vida.')"></div>
     </div>
